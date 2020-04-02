@@ -1,0 +1,55 @@
+{% extends "./base.html" %}
+
+{% block title %}
+    {% if tag %}
+        标签页:{{ tag.name }}
+    {% elif category %}
+        分类页:{{ category.name }}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <ul>
+    {% for post in post_list %}
+        <li>
+            <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+            <div>
+                <span>作者：{{ post.owner.username }}</span>
+                <span>分类：{{ post.category.name }}</span>
+            </div>
+            <p>{{ post.desc }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+
+    {% if page_obj %}
+        {% if page_obj.has_previous %}
+            <span style="height:28px;line-height:28px;color:#999;border-radius:3px;border: 1px solid;">
+                <a href="?page={{ page_obj.previous_page_number }}" style="text-decoration: none;">上一页</a>
+            </span>
+        {% endif %}
+        {{ page_obj.number }} / {{ paginator.num_pages }}
+        {% if page_obj.has_next %}
+            <span style="height:28px;line-height:28px;color:#999;border-radius:3px;border: 1px solid;">
+                <a href="?page={{ page_obj.next_page_number }}" style="text-decoration: none;">下一页</a>
+            </span>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+<hr>
+<div>底部分类：
+    {% for cate in categories %}
+        <a href="{% url 'category_list' cate.id %}">{{ cate.name }}</a>
+    {% endfor %}
+</div>
+
+<div>侧边栏展示：
+    {% for sidebar in side_bars %}
+        <h4>{{ sidebar.title }}</h4>
+        {{ sidebar.content_html }}
+    {% endfor %}
+
+</div>
+</body>
+</html>
